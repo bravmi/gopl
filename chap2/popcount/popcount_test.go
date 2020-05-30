@@ -9,42 +9,44 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const testNumber uint64 = 0x1234567890ABCDEF
+
 func TestPopCountTable(t *testing.T) {
-	assert.Equal(t, 32, PopCountTable(0x1234567890ABCDEF))
+	assert.Equal(t, 32, PopCountTable(testNumber))
 }
 
 func TestPopCountTableLoop(t *testing.T) {
-	assert.Equal(t, PopCountTable(0x1234567890ABCDEF), PopCountTableLoop(0x1234567890ABCDEF))
+	assert.Equal(t, PopCountTable(testNumber), PopCountTableLoop(testNumber))
 }
 
 func TestPopCountShift(t *testing.T) {
-	assert.Equal(t, PopCountTable(0x1234567890ABCDEF), PopCountShift(0x1234567890ABCDEF))
+	assert.Equal(t, PopCountTable(testNumber), PopCountShift(testNumber))
 }
 
 func TestPopCountClear(t *testing.T) {
-	assert.Equal(t, PopCountTable(0x1234567890ABCDEF), PopCountClear(0x1234567890ABCDEF))
+	assert.Equal(t, PopCountTable(testNumber), PopCountClear(testNumber))
 }
 
 func BenchmarkPopCountTable(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		PopCountTable(0x1234567890ABCDEF)
+		PopCountTable(testNumber)
 	}
 }
 
 func BenchmarkPopCountTableLoop(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		PopCountTableLoop(0x1234567890ABCDEF)
+		PopCountTableLoop(testNumber)
 	}
 }
 
 func BenchmarkPopCountShift(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		PopCountShift(0x1234567890ABCDEF)
+		PopCountShift(testNumber)
 	}
 }
 
 func BenchmarkPopCountClear(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		PopCountTable(0x1234567890ABCDEF)
+		PopCountTable(testNumber)
 	}
 }
