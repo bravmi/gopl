@@ -1,5 +1,5 @@
 // Covers all of ex3, ex4, ex5
-package ex3
+package popcount
 
 // pc[i] is the population count of i.
 var pc [256]byte
