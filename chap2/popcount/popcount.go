@@ -24,14 +24,14 @@ func PopCountTable(x uint64) int {
 func PopCountTableLoop(x uint64) int {
 	n := 0
 	for i := 0; i < 8; i++ {
-		n += int(pc[byte(x>>(uint(i)*8))])
+		n += int(pc[byte(x>>(i*8))])
 	}
 	return n
 }
 
 func PopCountShift(x uint64) int {
 	n := 0
-	for i := uint(0); i < 64; i++ {
+	for i := 0; i < 64; i++ {
 		if x&1 != 0 {
 			n++
 		}
