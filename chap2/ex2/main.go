@@ -73,11 +73,11 @@ func main() {
 	for _, arg := range os.Args[1:] {
 		measure, err := parseArg(arg)
 		if err != nil {
-			log.Fatalf(err.Error())
+			log.Fatal(err.Error())
 		}
 		err = printMeasure(measure)
 		if err != nil {
-			log.Fatalf(err.Error())
+			log.Fatal(err.Error())
 		}
 	}
 }
