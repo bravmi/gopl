@@ -20,7 +20,6 @@ func comma(s string) string {
 	m := re.FindStringSubmatch(s)
 	if m == nil {
 		log.Fatal("invalid string")
-		return ""
 	}
 	buf := bytes.Buffer{}
 
