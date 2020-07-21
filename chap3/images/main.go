@@ -32,11 +32,11 @@ func main() {
 	)
 	f := mandelbrot
 
-	file := flag.Bool("f", false, "write to 'images.png'")
+	tofile := flag.Bool("f", false, "write to 'images.png'")
 	flag.Parse()
 
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
-	if *file {
+	if *tofile {
 		fi, err := os.Create("images.png")
 		defer fi.Close()
 		if err != nil {
