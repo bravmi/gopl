@@ -5,15 +5,14 @@ import "fmt"
 // not exactly single pass but I like it
 func rotateRight(a []int, k int) {
 	n := len(a)
-	b := a[n-k:]
-	b = append(b, a[:n-k]...)
-	copy(a, b)
+	k = k % n
+	rotateLeft(a, n-k)
 }
 
 func rotateLeft(a []int, k int) {
-	n := len(a)
-	k = k % n
-	rotateRight(a, n-k)
+	b := a[k:]
+	b = append(b, a[:k]...)
+	copy(a, b)
 }
 
 func main() {
