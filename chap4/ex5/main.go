@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func squash(strs []string) []string {
+func squashSame(strs []string) []string {
 	i := 0
 	for _, s := range strs[1:] {
 		if strs[i] == s {
@@ -17,5 +17,5 @@ func squash(strs []string) []string {
 func main() {
 	strs := []string{"a", "a", "b", "c", "c", "c", "d", "d", "e"}
 	fmt.Println("squash:")
-	fmt.Println(squash(strs))
+	fmt.Println(squashSame(strs))
 }
