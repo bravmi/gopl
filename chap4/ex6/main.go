@@ -17,6 +17,8 @@ func squashSpaces(b []byte) []byte {
 			continue
 		}
 		if space {
+			// size = utf8.EncodeRune(b[i:], rune(' '))
+			// i += size
 			b[i] = byte(' ')
 			i++
 			space = false
