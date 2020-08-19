@@ -1,0 +1,23 @@
+package main
+
+import "fmt"
+
+// not exactly single pass but I like it
+func rotateRight(a []int, k int) {
+	n := len(a)
+	b := a[n-k:]
+	b = append(b, a[:n-k]...)
+	copy(a, b)
+}
+
+func rotateLeft(a []int, k int) {
+	n := len(a)
+	k = k % n
+	rotateRight(a, n-k)
+}
+
+func main() {
+	a := []int{1, 2, 3, 4, 5}
+	rotateLeft(a, 2)
+	fmt.Println("a:", a)
+}
