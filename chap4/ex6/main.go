@@ -3,23 +3,29 @@ package main
 import (
 	"fmt"
 	"unicode"
+	"unicode/utf8"
 )
 
 func squashSpaces(b []byte) []byte {
-	out := make([]rune, 0)
 	space := false
-	for _, r := range string(b) {
+	i := 0
+	for j := 0; j < len(b); {
+		r, size := utf8.DecodeRune(b[j:])
 		if unicode.IsSpace(r) {
+			j += size
 			space = true
 			continue
 		}
 		if space {
-			out = append(out, ' ')
+			b[i] = ' '
+			i++
 			space = false
 		}
-		out = append(out, r)
+		utf8.EncodeRune(b[i:], r)
+		i += size
+		j += size
 	}
-	return []byte(string(out))
+	return b[:i]
 }
 
 func main() {
