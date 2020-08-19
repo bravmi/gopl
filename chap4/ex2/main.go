@@ -1,3 +1,5 @@
+// usage:
+// go run main.go boo
 package main
 
 import (
