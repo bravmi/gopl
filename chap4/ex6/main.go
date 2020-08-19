@@ -17,7 +17,7 @@ func squashSpaces(b []byte) []byte {
 			continue
 		}
 		if space {
-			b[i] = ' '
+			b[i] = byte(' ')
 			i++
 			space = false
 		}
