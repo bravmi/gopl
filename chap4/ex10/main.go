@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"gopl.io/ch4/github"
+	"github.com/bravmi/gopl/chap4/github"
 )
 
 type Issue = github.Issue
