@@ -1,4 +1,4 @@
-// Issues prints a table of GitHub issues matching the search terms.
+// Prints a table of GitHub issues matching the search terms.
 // usage: go run main.go repo:golang/go is:open json decoder
 package main
 
