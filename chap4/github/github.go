@@ -98,12 +98,17 @@ func CreateIssue(owner, repo string, params map[string]string) (*Issue, error) {
 	}
 
 	url := fmt.Sprintf("%s/repos/%s/%s/issues", APIURL, owner, repo)
-	resp, err := http.Post(url, "application/json", buf)
+	req, err := http.NewRequest("POST", url, buf)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Token %s", os.Getenv("GITHUB_TOKEN")));
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusCreated {
 		return nil, fmt.Errorf("failed to post issue %s: %s", url, resp.Status)
 	}
 	var issue Issue
@@ -122,10 +127,10 @@ func UpdateIssue(owner, repo, number string, params map[string]string) (*Issue, 
 
 	url := fmt.Sprintf("%s/repos/%s/%s/issues/%s", APIURL, owner, repo, number)
 	req, err := http.NewRequest("PATCH", url, buf)
-	req.SetBasicAuth(os.Getenv("GITHUB_USER"), os.Getenv("GITHUB_PASS"))
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Set("Authorization", fmt.Sprintf("Token %s", os.Getenv("GITHUB_TOKEN")));
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err

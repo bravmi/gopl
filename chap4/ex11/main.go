@@ -1,3 +1,14 @@
+// Based on:
+// https://github.com/torbiak/gopl/blob/master/ex4.11
+//
+// usage:
+// go run main.go search repo:golang/go is:open json decoder
+// go run main.go create bravmi gopl
+// go run main.go read bravmi gopl 4
+// go run main.go edit bravmi gopl 4
+// go run main.go close bravmi gopl 4
+// go run main.go open bravmi gopl 4
+
 package main
 
 import (
@@ -9,6 +20,7 @@ import (
 	"os/exec"
 
 	"github.com/bravmi/gopl/chap4/github"
+	"github.com/joho/godotenv"
 )
 
 func search(query []string) {
@@ -22,38 +34,45 @@ func search(query []string) {
 	}
 }
 
+func print(issue *github.Issue) {
+	fmt.Println("issue:")
+	b, err := json.MarshalIndent(issue, "", "    ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(b))
+}
+
 func read(owner, repo, number string) {
 	issue, err := github.GetIssue(owner, repo, number)
 	if err != nil {
 		log.Fatal(err)
 	}
-	body := issue.Body
-	if body == "" {
-		body = "<empty>\n"
-	}
-	fmt.Printf("repo: %s/%s\nnumber: %s\nuser: %s\ntitle: %s\n\n%s",
-		owner, repo, number, issue.User.Login, issue.Title, body)
+	print(issue)
 }
 
 func close_(owner, repo, number string) {
-	_, err := github.UpdateIssue(owner, repo, number, map[string]string{"state": "closed"})
+	issue, err := github.UpdateIssue(owner, repo, number, map[string]string{"state": "closed"})
 	if err != nil {
 		log.Fatal(err)
 	}
+	print(issue)
 }
 
 func open(owner string, repo string, number string) {
-	_, err := github.UpdateIssue(owner, repo, number, map[string]string{"state": "open"})
+	issue, err := github.UpdateIssue(owner, repo, number, map[string]string{"state": "open"})
 	if err != nil {
 		log.Fatal(err)
 	}
+	print(issue)
 }
 
-func create(owner, repo string) {
-	_, err := github.CreateIssue(owner, repo, map[string]string{"body": "body"})
+func create(owner, repo, title string) {
+	issue, err := github.CreateIssue(owner, repo, map[string]string{"title": title})
 	if err != nil {
 		log.Fatal(err)
 	}
+	print(issue)
 }
 
 func edit(owner string, repo string, number string) {
@@ -104,10 +123,11 @@ func edit(owner string, repo string, number string) {
 		log.Fatal(err)
 	}
 
-	_, err = github.UpdateIssue(owner, repo, number, params)
+	issue, err = github.UpdateIssue(owner, repo, number, params)
 	if err != nil {
 		log.Fatal(err)
 	}
+	print(issue)
 }
 
 var usage string = `usage:
@@ -136,18 +156,21 @@ func main() {
 		return
 	}
 
-	if cmd == "create" {
-		if len(args) != 2 {
-			usageDie()
-		}
-		owner, repo := args[0], args[1]
-		create(owner, repo)
-		return
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error loading .env file")
 	}
 
 	if len(args) != 3 {
 		usageDie()
 	}
+
+	if cmd == "create" {
+		owner, repo, title := args[0], args[1], args[2]
+		create(owner, repo, title)
+		return
+	}
+
 	owner, repo, number := args[0], args[1], args[2]
 	switch cmd {
 	case "read":
