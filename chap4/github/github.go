@@ -102,7 +102,7 @@ func CreateIssue(owner, repo string, params map[string]string) (*Issue, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Token %s", os.Getenv("GITHUB_TOKEN")));
+	req.Header.Set("Authorization", fmt.Sprintf("Token %s", os.Getenv("GITHUB_TOKEN")))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -130,7 +130,7 @@ func UpdateIssue(owner, repo, number string, params map[string]string) (*Issue, 
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Token %s", os.Getenv("GITHUB_TOKEN")));
+	req.Header.Set("Authorization", fmt.Sprintf("Token %s", os.Getenv("GITHUB_TOKEN")))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
