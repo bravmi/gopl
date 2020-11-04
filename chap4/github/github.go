@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -83,8 +84,13 @@ func GetIssue(owner, repo, number string) (*Issue, error) {
 	}
 	defer resp.Body.Close()
 
+	buf, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 	var issue Issue
-	if err := json.NewDecoder(resp.Body).Decode(&issue); err != nil {
+	err = json.Unmarshal(buf, &issue)
+	if err != nil {
 		return nil, err
 	}
 	return &issue, nil
