@@ -8,26 +8,23 @@ import (
 
 func squashSpaces(b []byte) []byte {
 	space := false
-	i := 0
-	for j := 0; j < len(b); {
-		r, size := utf8.DecodeRune(b[j:])
+	j := 0
+	for i := 0; i < len(b); {
+		r, size := utf8.DecodeRune(b[i:])
+		i += size
 		if unicode.IsSpace(r) {
-			j += size
 			space = true
 			continue
 		}
 		if space {
-			// size = utf8.EncodeRune(b[i:], rune(' '))
-			// i += size
-			b[i] = byte(' ')
-			i++
+			b[j] = byte(' ')
+			j++
 			space = false
 		}
-		utf8.EncodeRune(b[i:], r)
-		i += size
+		utf8.EncodeRune(b[j:], r)
 		j += size
 	}
-	return b[:i]
+	return b[:j]
 }
 
 func main() {
