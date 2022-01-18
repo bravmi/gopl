@@ -8,8 +8,7 @@ import (
 func main() {
 	s, sep := "", " "
 	for i, arg := range os.Args {
-		fmt.Printf("i = %v, arg = %v", i, arg)
-		fmt.Println()
+		fmt.Printf("i = %v, arg = %v\n", i, arg)
 		s += arg + sep
 	}
 	fmt.Println(s)
