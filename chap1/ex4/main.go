@@ -1,3 +1,6 @@
+// usage:
+// go build main.go
+// ./ex4 ../ex4/main.go ../ex3/main.go
 package main
 
 import (
@@ -9,13 +12,14 @@ import (
 func main() {
 	counts := make(map[string]map[string]int)
 	files := os.Args[1:]
+	fmt.Println(files)
 	if len(files) == 0 {
 		countLines(os.Stdin, "stdin", counts)
 	} else {
 		for _, arg := range files {
 			f, err := os.Open(arg)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
+				fmt.Fprintf(os.Stderr, "ex1.4: %v\n", err)
 				continue
 			}
 			countLines(f, arg, counts)
