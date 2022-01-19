@@ -1,3 +1,4 @@
+// usage: go run main.go http://bad.gopl.io
 package main
 
 import (
