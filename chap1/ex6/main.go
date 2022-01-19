@@ -1,3 +1,4 @@
+// usage: go run main.go web
 package main
 
 import (
@@ -20,11 +21,6 @@ var palette = []color.Color{
 	color.RGBA{0x00, 0x00, 0xff, 0xff}, // blue
 }
 
-const (
-	firstColorIndex = 0 // first color in palette
-	nextColorIndex  = 1 // next color in palette
-)
-
 func main() {
 	// The sequence of images is deterministic unless we seed
 	// the pseudo-random number generator using the current time.
@@ -36,7 +32,7 @@ func main() {
 			lissajous(w)
 		}
 		http.HandleFunc("/", handler)
-		log.Fatal(http.ListenAndServe("localhost:8000", nil))
+		log.Fatal(http.ListenAndServe("localhost:8001", nil))
 		return
 	}
 	lissajous(os.Stdout)
