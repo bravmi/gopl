@@ -1,3 +1,4 @@
+// usage: go run main.go web
 package main
 
 import (
@@ -31,7 +32,7 @@ func main() {
 			lissajous(w)
 		}
 		http.HandleFunc("/", handler)
-		log.Fatal(http.ListenAndServe("localhost:8000", nil))
+		log.Fatal(http.ListenAndServe("localhost:8001", nil))
 		return
 	}
 	lissajous(os.Stdout)
