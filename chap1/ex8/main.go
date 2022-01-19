@@ -1,3 +1,4 @@
+// usage: go run main.go gopl.io
 package main
 
 import (

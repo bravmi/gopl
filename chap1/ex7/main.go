@@ -1,4 +1,4 @@
-// usage: go run main.go http://bad.gopl.io
+// usage: go run main.go http://gopl.io
 package main
 
 import (
