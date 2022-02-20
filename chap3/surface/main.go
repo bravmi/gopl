@@ -5,6 +5,8 @@
 //!+
 
 // Surface computes an SVG rendering of a 3-D surface function.
+
+// usage: http://localhost:8080/?color=blue&zf=eggbox
 package main
 
 import (
