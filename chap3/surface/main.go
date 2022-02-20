@@ -100,7 +100,7 @@ func corner(i, j int, zf zfunc) (float64, float64, error) {
 
 	// Compute surface height z.
 	z := zf(x, y)
-	if math.IsInf(z, 0) {
+	if math.IsInf(z, 0) || math.IsNaN(z) {
 		return 0, 0, fmt.Errorf("invalid height")
 	}
 
