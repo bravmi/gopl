@@ -7,6 +7,7 @@
 // Surface computes an SVG rendering of a 3-D surface function.
 
 // usage: http://localhost:8080/?color=blue&zf=eggbox
+// usage: go run main.go -f
 package main
 
 import (
@@ -40,10 +41,10 @@ func main() {
 	color := "grey"
 	if *file {
 		fi, err := os.Create("surface.svg")
-		defer fi.Close()
 		if err != nil {
 			log.Fatal("failed to create a file")
 		}
+		defer fi.Close()
 		w := bufio.NewWriter(fi)
 		svg(w, f, color)
 		w.Flush()
@@ -78,12 +79,12 @@ func svg(w io.Writer, f zfunc, color string) {
 		for j := 0; j < cells; j++ {
 			// for 3.3 you could return z values here as well
 			// and check how close they are to global min / max
-			ax, ay, err := corner(i+1, j, f)
-			bx, by, err := corner(i, j, f)
-			cx, cy, err := corner(i, j+1, f)
-			dx, dy, err := corner(i+1, j+1, f)
-			if err != nil {
-				fmt.Printf("skipping invalid polygon: %v\n", err)
+			ax, ay, aerr := corner(i+1, j, f)
+			bx, by, berr := corner(i, j, f)
+			cx, cy, cerr := corner(i, j+1, f)
+			dx, dy, derr := corner(i+1, j+1, f)
+			if aerr != nil || berr != nil || cerr != nil || derr != nil {
+				fmt.Println("skipping invalid polygon")
 				continue
 			}
 			fmt.Fprintf(w, "<polygon style='stroke: %s' points='%g,%g %g,%g %g,%g %g,%g'/>\n", color,
