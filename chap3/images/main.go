@@ -5,6 +5,11 @@
 //!+
 
 // Mandelbrot emits a PNG image of the Mandelbrot fractal.
+
+// covers all of ex5, ex6
+// usage: http://localhost:8000
+// usage: http://localhost:8000?avg=true
+// usage: go run main.go -f
 package main
 
 import (
@@ -154,16 +159,16 @@ func main() {
 }
 
 func average(colors []color.Color) color.Color {
-	var R, G, B, A uint8
+	var R, G, B, A uint16
 	n := len(colors)
 	for _, c := range colors {
 		r, g, b, a := c.RGBA()
-		R += uint8(r / uint32(n))
-		G += uint8(g / uint32(n))
-		B += uint8(b / uint32(n))
-		A += uint8(a / uint32(n))
+		R += uint16(r / uint32(n))
+		G += uint16(g / uint32(n))
+		B += uint16(b / uint32(n))
+		A += uint16(a / uint32(n))
 	}
-	return color.RGBA{R, G, B, A}
+	return color.RGBA64{R, G, B, A}
 }
 
 func mandelbrot(z complex128) color.Color {
