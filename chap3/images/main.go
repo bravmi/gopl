@@ -8,7 +8,8 @@
 
 // covers all of ex5, ex6
 // usage: http://localhost:8000
-// usage: http://localhost:8000?avg=true
+// usage: http://localhost:8080/?avg=true&xmax=1&ymax=1
+// usage: http://localhost:8080/?f=newton&zoom=2
 // usage: go run main.go -f
 package main
 
