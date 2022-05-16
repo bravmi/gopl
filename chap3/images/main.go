@@ -149,7 +149,7 @@ func main() {
 
 			png.Encode(w, img)
 		})
-		log.Fatal(http.ListenAndServe(":8080", nil))
+		log.Fatal(http.ListenAndServe("localhost:8080", nil))
 	}
 }
 
