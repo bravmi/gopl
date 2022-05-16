@@ -1,4 +1,4 @@
-// go run main.go 1 12 123 1234 1234567890
+// usage: go run main.go 1 12 123 1234 1234567890
 package main
 
 import (
