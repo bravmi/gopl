@@ -38,10 +38,10 @@ func main() {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	if *tofile {
 		fi, err := os.Create("images.png")
-		defer fi.Close()
 		if err != nil {
 			log.Fatal("failed to create a file")
 		}
+		defer fi.Close()
 
 		for py := 0; py < height; py++ {
 			y := float64(py)/height*(ymax-ymin) + ymin
