@@ -19,5 +19,3 @@ func TestReverse2(t *testing.T) {
 	reverseUTF8(b)
 	assert.Equal(t, want, b)
 }
-
-
