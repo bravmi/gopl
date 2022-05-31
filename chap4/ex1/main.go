@@ -1,8 +1,10 @@
+// usage: go run main.go
 package main
 
 import (
-	"fmt"
 	"crypto/sha256"
+	"fmt"
+
 	"github.com/bravmi/gopl/chap2/popcount"
 )
 
