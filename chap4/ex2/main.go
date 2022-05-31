@@ -1,5 +1,4 @@
-// usage:
-// go run main.go boo
+// usage: go run main.go boo
 package main
 
 import (
@@ -13,7 +12,7 @@ func main() {
 	sha := flag.String("sha", "256", "which sha: 256 / 384 / 512")
 	flag.Parse()
 	for _, s := range flag.Args() {
-		b := []byte{}
+		var b []byte
 		switch *sha {
 		case "384":
 			c := sha512.Sum384([]byte(s))
