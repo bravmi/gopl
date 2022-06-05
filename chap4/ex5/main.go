@@ -3,15 +3,14 @@ package main
 import "fmt"
 
 func squashSame(strs []string) []string {
-	i := 0
+	k := 0
 	for _, s := range strs[1:] {
-		if strs[i] == s {
-			continue
+		if strs[k] != s {
+			k++
+			strs[k] = s
 		}
-		i++
-		strs[i] = s
 	}
-	return strs[:i+1]
+	return strs[:k+1]
 }
 
 func main() {
