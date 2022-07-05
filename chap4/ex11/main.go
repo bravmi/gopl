@@ -156,13 +156,13 @@ func main() {
 		return
 	}
 
+	if len(args) != 3 {
+		usageDie()
+	}
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("error loading .env file")
-	}
-
-	if len(args) != 3 {
-		usageDie()
 	}
 
 	if cmd == "create" {
