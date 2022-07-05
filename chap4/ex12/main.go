@@ -17,8 +17,8 @@ import (
 	"strings"
 )
 
-const indexFile = "index.json"
-const comicsUrlFormat = "https://xkcd.com/%d/info.0.json"
+const INDEX_FILE = "index.json"
+const COMICS_URL = "https://xkcd.com/%d/info.0.json"
 
 type Index struct {
 	FilePath string
@@ -77,7 +77,7 @@ func (i *Index) build(fromNum, toNum int) {
 		if _, exists := i.Comics[num]; exists {
 			continue
 		}
-		url := fmt.Sprintf(comicsUrlFormat, num)
+		url := fmt.Sprintf(COMICS_URL, num)
 		comic, err := getComic(url)
 		if err != nil {
 			log.Println(err)
@@ -106,7 +106,7 @@ func main() {
 	search := flag.String("search", "", "search for transcript and title")
 	flag.Parse()
 
-	index := getIndex(indexFile)
+	index := getIndex(INDEX_FILE)
 	if *fromNum != 0 && *toNum != 0 {
 		index.build(*fromNum, *toNum)
 		index.save()
