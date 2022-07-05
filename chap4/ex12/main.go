@@ -100,6 +100,14 @@ func (i *Index) search(query string) []*Comic {
 	return foundComics
 }
 
+func (c *Comic) print() {
+	b, err := json.MarshalIndent(c, "", "\t")
+	if err != nil {
+		return
+	}
+	log.Println(string(b))
+}
+
 func main() {
 	fromNum := flag.Int("from", 0, "num from which to build index")
 	toNum := flag.Int("to", 1, "num to which to build index")
@@ -114,11 +122,7 @@ func main() {
 	if *search != "" {
 		foundComics := index.search(*search)
 		for _, comic := range foundComics {
-			b, err := json.MarshalIndent(comic, "", "\t")
-			if err != nil {
-				continue
-			}
-			log.Println(string(b))
+			comic.print()
 		}
 	}
 }
