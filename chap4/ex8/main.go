@@ -1,4 +1,4 @@
-// usage: go run main.go -top 10 < main.go
+// Usage: go run main.go -top 10 < main.go
 package main
 
 import (

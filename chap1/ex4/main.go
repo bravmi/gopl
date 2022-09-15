@@ -1,4 +1,4 @@
-// usage:
+// Usage:
 // go build main.go
 // ./ex4 ../ex4/main.go ../ex3/main.go
 package main

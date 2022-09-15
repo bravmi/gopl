@@ -7,10 +7,10 @@
 // Mandelbrot emits a PNG image of the Mandelbrot fractal.
 
 // covers all of ex5, ex6
-// usage: http://localhost:8000
-// usage: http://localhost:8080/?avg=true&xmax=1&ymax=1
-// usage: http://localhost:8080/?f=newton&zoom=2
-// usage: go run main.go -f
+// Usage: http://localhost:8000
+// Usage: http://localhost:8080/?avg=true&xmax=1&ymax=1
+// Usage: http://localhost:8080/?f=newton&zoom=2
+// Usage: go run main.go -f
 package main
 
 import (
@@ -207,8 +207,9 @@ func sqrt(z complex128) color.Color {
 // f(x) = x^4 - 1
 //
 // z' = z - f(z)/f'(z)
-//    = z - (z^4 - 1) / (4 * z^3)
-//    = z - (z - 1/z^3) / 4
+//
+//	= z - (z^4 - 1) / (4 * z^3)
+//	= z - (z - 1/z^3) / 4
 func newton(z complex128) color.Color {
 	const iterations = 37
 	const contrast = 7

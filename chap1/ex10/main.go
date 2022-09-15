@@ -1,4 +1,4 @@
-// usage:
+// Usage:
 // time go run main.go https://golang.org http://gopl.io https://godoc.org
 // time go run main.go https://golang.org http://gopl.io https://godoc http://ffp.airchina.com.cn/appen/login/member
 package main

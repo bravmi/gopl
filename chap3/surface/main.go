@@ -7,8 +7,8 @@
 // Surface computes an SVG rendering of a 3-D surface function.
 
 // covers all of ex1, ex2, ex3, ex4
-// usage: http://localhost:8080/?color=blue&zf=eggbox
-// usage: go run main.go -f
+// Usage: http://localhost:8080/?color=blue&zf=eggbox
+// Usage: go run main.go -f
 package main
 
 import (

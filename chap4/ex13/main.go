@@ -1,4 +1,4 @@
-// usage:
+// Usage:
 // go run main.go pay
 // go run main.go 'pay it forward'
 package main

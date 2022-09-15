@@ -1,7 +1,7 @@
 // Based on:
 // https://github.com/vinceyuan/gopl-solutions/blob/master/ch04/ex4.12/ex4.12.go
 //
-// usage:
+// Usage:
 // go run main.go -from 1 -to 10
 // go run main.go -search sketch
 package main
