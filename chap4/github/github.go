@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -84,16 +83,26 @@ func GetIssue(owner, repo, number string) (*Issue, error) {
 	}
 	defer resp.Body.Close()
 
-	buf, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
 	var issue Issue
-	err = json.Unmarshal(buf, &issue)
-	if err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&issue); err != nil {
 		return nil, err
 	}
 	return &issue, nil
+}
+
+func GetIssues(owner, repo string) ([]Issue, error) {
+	url := fmt.Sprintf("%s/repos/%s/%s/issues", APIURL, owner, repo)
+	resp, err := get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var issues []Issue
+	if err := json.NewDecoder(resp.Body).Decode(&issues); err != nil {
+		return nil, err
+	}
+	return issues, nil
 }
 
 func CreateIssue(owner, repo string, params map[string]string) (*Issue, error) {
