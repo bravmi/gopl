@@ -31,10 +31,17 @@ func init() {
 	issueRe = regexp.MustCompile(`^/issues/(\d+)/?$`)
 }
 
+func cacheURL(issue *github.Issue) {
+	issue.HTMLURL = fmt.Sprintf("/issues/%d", issue.Number)
+}
+
 func loadIssues(owner, repo string) (cache Cache, err error) {
 	issues, err := github.GetIssues(owner, repo)
 	if err != nil {
 		return
+	}
+	for i := range issues {
+		cacheURL(&issues[i])
 	}
 	cache.Issues = issues
 	cache.IssuesByNumber = make(map[int]github.Issue, len(issues))
@@ -52,7 +59,8 @@ func (cache Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	if s := issueRe.FindString(r.URL.Path); s != "" {
+	if ret := issueRe.FindStringSubmatch(r.URL.Path); ret != nil {
+		s := ret[1]
 		num, err := strconv.Atoi(s)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -83,5 +91,5 @@ func main() {
 	}
 
 	http.Handle("/", cache)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
