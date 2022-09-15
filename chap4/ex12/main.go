@@ -4,7 +4,6 @@
 // usage:
 // go run main.go -from 1 -to 10
 // go run main.go -search sketch
-
 package main
 
 import (
