@@ -11,17 +11,17 @@ import (
 	"golang.org/x/net/html"
 )
 
-func visit(counts *map[string]int, n *html.Node) *map[string]int {
+func visit(counts map[string]int, n *html.Node) map[string]int {
 	if n.Type == html.ElementNode {
-		(*counts)[n.Data]++
+		counts[n.Data]++
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		*counts = *visit(counts, c)
+		counts = visit(counts, c)
 	}
 	return counts
 }
 
-func countNodes(url string) (*map[string]int, error) {
+func countNodes(url string) (map[string]int, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func countNodes(url string) (*map[string]int, error) {
 	if err != nil {
 		return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
 	}
-	counts := &map[string]int{}
+	counts := map[string]int{}
 	return visit(counts, doc), nil
 }
 
@@ -46,13 +46,13 @@ func main() {
 			fmt.Fprintf(os.Stderr, "countNodes: %v\n", err)
 			continue
 		}
-		keys := make([]string, 0, len(*counts))
-		for key := range *counts {
+		keys := make([]string, 0, len(counts))
+		for key := range counts {
 			keys = append(keys, key)
 		}
-		sort.Slice(keys, func(i, j int) bool { return (*counts)[keys[i]] < (*counts)[keys[j]] })
+		sort.Slice(keys, func(i, j int) bool { return counts[keys[i]] < counts[keys[j]] })
 		for _, key := range keys {
-			fmt.Printf("%-10s => %d\n", key, (*counts)[key])
+			fmt.Printf("%-10s => %d\n", key, counts[key])
 		}
 	}
 }
