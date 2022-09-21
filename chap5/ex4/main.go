@@ -34,11 +34,8 @@ func visit(links []string, n *html.Node) []string {
 			}
 		}
 	}
-	if n.FirstChild != nil {
-		links = visit(links, n.FirstChild)
-	}
-	if n.NextSibling != nil {
-		links = visit(links, n.NextSibling)
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		links = visit(links, c)
 	}
 	return links
 }
