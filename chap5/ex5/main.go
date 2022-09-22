@@ -48,7 +48,6 @@ func main() {
 	for _, url := range os.Args[1:] {
 		words, images, err := CountWordsAndImages(url)
 		if err != nil {
-			fmt.Printf("words: %d, images: %d\n", words, images)
 			fmt.Fprintf(os.Stderr, "CountWordsAndImages: %v\n", err)
 			continue
 		}
