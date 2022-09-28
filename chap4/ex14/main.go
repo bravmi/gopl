@@ -22,13 +22,13 @@ type Cache struct {
 }
 
 var issueListTemplate, issueTemplate *template.Template
-var issueListRe, issueRe *regexp.Regexp
+var issueListPat, issuePat *regexp.Regexp
 
 func init() {
 	issueListTemplate = template.Must(template.ParseFiles("issueList.tpl"))
 	issueTemplate = template.Must(template.ParseFiles("issue.tpl"))
-	issueListRe = regexp.MustCompile(`^/issues/?$`)
-	issueRe = regexp.MustCompile(`^/issues/(\d+)/?$`)
+	issueListPat = regexp.MustCompile(`^/issues/?$`)
+	issuePat = regexp.MustCompile(`^/issues/(\d+)/?$`)
 }
 
 func cacheURL(issue *github.Issue) {
@@ -52,14 +52,14 @@ func loadIssues(owner, repo string) (cache Cache, err error) {
 }
 
 func (cache Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if issueListRe.MatchString(r.URL.Path) {
+	if issueListPat.MatchString(r.URL.Path) {
 		err := issueListTemplate.Execute(w, cache)
 		if err != nil {
 			log.Fatal(err)
 		}
 		return
 	}
-	if ret := issueRe.FindStringSubmatch(r.URL.Path); ret != nil {
+	if ret := issuePat.FindStringSubmatch(r.URL.Path); ret != nil {
 		s := ret[1]
 		num, err := strconv.Atoi(s)
 		if err != nil {

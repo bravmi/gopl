@@ -6,13 +6,13 @@ import (
 	"strings"
 )
 
-var shellPattern = regexp.MustCompile(`\$([a-zA-Z_][a-zA-Z0-9_]*)`)
+var shellPat = regexp.MustCompile(`\$[a-zA-Z_][a-zA-Z0-9_]*`)
 
 func expand(s string, f func(string) string) string {
 	wrapper := func(s string) string {
 		return f(s[1:])
 	}
-	return shellPattern.ReplaceAllStringFunc(s, wrapper)
+	return shellPat.ReplaceAllStringFunc(s, wrapper)
 }
 
 func main() {

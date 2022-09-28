@@ -16,8 +16,8 @@ func main() {
 }
 
 func comma(s string) string {
-	re := regexp.MustCompile(`([+-])?(\d+)([.]\d+)?`)
-	m := re.FindStringSubmatch(s)
+	pat := regexp.MustCompile(`([+-])?(\d+)([.]\d+)?`)
+	m := pat.FindStringSubmatch(s)
 	if m == nil {
 		log.Fatal("invalid string")
 	}

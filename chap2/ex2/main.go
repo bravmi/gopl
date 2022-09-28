@@ -36,8 +36,8 @@ type Measure struct {
 }
 
 func parseArg(s string) (Measure, error) {
-	re := regexp.MustCompile(`([\d.]+)(\w+)`)
-	match := re.FindStringSubmatch(s)
+	pat := regexp.MustCompile(`([\d.]+)(\w+)`)
+	match := pat.FindStringSubmatch(s)
 	if match == nil {
 		return Measure{}, fmt.Errorf("expected <number><unit>, got %q", s)
 	}
