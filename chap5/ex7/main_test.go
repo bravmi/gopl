@@ -22,7 +22,6 @@ func TestCanBeParsed(t *testing.T) {
 		</body>
 		</html>
 	`
-	// ...
 	doc, err := html.Parse(strings.NewReader(text))
 	assert.NoError(t, err)
 
