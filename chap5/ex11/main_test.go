@@ -22,3 +22,9 @@ func TestTopoSortTim(t *testing.T) {
 	order, _ := topoSort(m)
 	assert.Equal(t, []string{"s", "v", "w", "t"}, order)
 }
+
+func TestTopoSortSelf(t *testing.T) {
+	m := map[string][]string{"s": {"s"}}
+	_, err := topoSort(m)
+	assert.ErrorContains(t, err, "cycle")
+}
