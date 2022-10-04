@@ -50,6 +50,21 @@ func main() {
 	}
 }
 
+func cycleError(history map[string]int, item string) error {
+	start, ok := history[item]
+	if !ok {
+		return nil
+	}
+	cycle := []string{}
+	for s, i := range history {
+		if i >= start {
+			cycle = append(cycle, s)
+		}
+	}
+	cycle = append(cycle, item)
+	return fmt.Errorf("cycle: %s", strings.Join(cycle, " -> "))
+}
+
 func topoSort(m map[string][]string) (order []string, err error) {
 	seen := make(map[string]bool)
 	var visitAll func(items []string, history map[string]int) error
@@ -57,18 +72,10 @@ func topoSort(m map[string][]string) (order []string, err error) {
 	visitAll = func(items []string, history map[string]int) error {
 		for _, item := range items {
 			if seen[item] {
-				start, ok := history[item]
-				if !ok {
-					break
+				err := cycleError(history, item)
+				if err != nil {
+					return err
 				}
-				cycle := []string{}
-				for s, i := range history {
-					if i >= start {
-						cycle = append(cycle, s)
-					}
-				}
-				cycle = append(cycle, item)
-				return fmt.Errorf("cycle: %s", strings.Join(cycle, " -> "))
 			} else {
 				seen[item] = true
 				history[item] = len(history)
