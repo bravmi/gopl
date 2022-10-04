@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestTopoSort(t *testing.T) {
+func TestTopoSortPrereqs(t *testing.T) {
 	order := topoSort(prereqs)
 	seen := make(map[string]bool)
 	for _, item := range order {
