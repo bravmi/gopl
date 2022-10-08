@@ -36,6 +36,7 @@ var prereqs = map[string][]string{
 func breadthFirst(f func(item string) []string, worklist []string) {
 	seen := make(map[string]bool)
 	for len(worklist) > 0 {
+		fmt.Printf("worklist: %q\n", worklist)
 		items := worklist
 		worklist = nil
 		for _, item := range items {
@@ -50,11 +51,18 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 
 //!-breadthFirst
 
+func randomKey(m map[string][]string) string {
+	for k := range m {
+		return k
+	}
+	return ""
+}
+
 // !+main
 func main() {
-	worklist := []string{"compilers"}
+	worklist := []string{randomKey(prereqs)}
 	deps := func(item string) []string {
-		fmt.Printf("%q -> %q\n", item, prereqs[item])
+		fmt.Printf("\t%q -> %q\n", item, prereqs[item])
 		return prereqs[item]
 	}
 	breadthFirst(deps, worklist)
