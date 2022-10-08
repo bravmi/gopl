@@ -51,6 +51,7 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 
 //!-breadthFirst
 
+// not a very good random distribution
 func randomKey(m map[string][]string) string {
 	for k := range m {
 		return k
