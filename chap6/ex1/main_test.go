@@ -41,3 +41,9 @@ func TestCopy(t *testing.T) {
 	y := x.Copy()
 	assert.Equal(t, x.String(), y.String())
 }
+
+func TestAddAll(t *testing.T) {
+	var x IntSet
+	x.AddAll(1, 144, 9)
+	assert.Equal(t, "{1 9 144}", x.String())
+}
