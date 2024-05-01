@@ -80,3 +80,11 @@ func TestSymmetricDifference(t *testing.T) {
 	x.SymmetricDifference(&y)
 	assert.Equal(t, "{1 42 144}", x.String())
 }
+
+func TestElems(t *testing.T) {
+	var x IntSet
+	x.Add(1)
+	x.Add(144)
+	x.Add(9)
+	assert.Equal(t, []int{1, 9, 144}, x.Elems())
+}
