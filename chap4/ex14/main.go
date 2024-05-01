@@ -64,15 +64,24 @@ func (cache Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		num, err := strconv.Atoi(s)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("Invalid issue number"))
+			_, err = w.Write([]byte("Invalid issue number"))
+			if err != nil {
+				log.Fatal(err)
+			}
 			return
 		}
 		issue, ok := cache.IssuesByNumber[num]
 		if !ok {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte("Invalid issue number"))
+			_, err = w.Write([]byte("Invalid issue number"))
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
-		issueTemplate.Execute(w, issue)
+		err = issueTemplate.Execute(w, issue)
+		if err != nil {
+			log.Fatal(err)
+		}
 		return
 	}
 }

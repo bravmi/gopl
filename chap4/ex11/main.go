@@ -13,7 +13,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -83,7 +82,7 @@ func edit(owner string, repo string, number string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tempfile, err := ioutil.TempFile("", "edit_issue")
+	tempfile, err := os.CreateTemp("", "edit_issue")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -116,7 +115,10 @@ func edit(owner string, repo string, number string) {
 		log.Fatal(err)
 	}
 
-	tempfile.Seek(0, 0)
+	_, err = tempfile.Seek(0, 0)
+	if err != nil {
+		log.Fatal(err)
+	}
 	params := make(map[string]string)
 	if err = json.NewDecoder(tempfile).Decode(&params); err != nil {
 		log.Fatal(err)

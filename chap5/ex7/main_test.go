@@ -33,7 +33,8 @@ func TestCanBeParsed(t *testing.T) {
 	outC := make(chan string)
 	go func() {
 		var buf bytes.Buffer
-		io.Copy(&buf, r)
+		_, err = io.Copy(&buf, r)
+		assert.NoError(t, err)
 		outC <- buf.String()
 	}()
 

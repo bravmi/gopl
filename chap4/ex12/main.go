@@ -10,9 +10,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -51,7 +51,7 @@ func getIndex(filePath string) *Index {
 		Comics:   make(map[int]*Comic),
 	}
 
-	data, err := ioutil.ReadFile(filePath)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return index
 	}
@@ -66,7 +66,7 @@ func (i *Index) save() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := ioutil.WriteFile(i.FilePath, data, 0644); err != nil {
+	if err := os.WriteFile(i.FilePath, data, 0644); err != nil {
 		log.Fatal(err)
 	}
 }

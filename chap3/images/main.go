@@ -60,7 +60,10 @@ func main() {
 		}
 
 		w := bufio.NewWriter(fi)
-		png.Encode(w, img) // NOTE: ignoring errors
+		err = png.Encode(w, img)
+		if err != nil {
+			log.Fatal("failed to encode an image")
+		}
 		w.Flush()
 	} else {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -153,7 +156,10 @@ func main() {
 				}
 			}
 
-			png.Encode(w, img)
+			err := png.Encode(w, img)
+			if err != nil {
+				log.Printf("failed to encode an image: %v", err)
+			}
 		})
 		log.Fatal(http.ListenAndServe("localhost:8080", nil))
 	}

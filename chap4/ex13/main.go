@@ -6,7 +6,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -57,11 +57,11 @@ func (m *Movie) downloadPoster() {
 	}
 	defer resp.Body.Close()
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return
 	}
-	err = ioutil.WriteFile("poster.jpg", data, 0644)
+	err = os.WriteFile("poster.jpg", data, 0644)
 	if err != nil {
 		return
 	}
