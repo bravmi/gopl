@@ -47,3 +47,36 @@ func TestAddAll(t *testing.T) {
 	x.AddAll(1, 144, 9)
 	assert.Equal(t, "{1 9 144}", x.String())
 }
+
+func TestIntersectWith(t *testing.T) {
+	var x, y IntSet
+	x.Add(1)
+	x.Add(144)
+	x.Add(9)
+	y.Add(9)
+	y.Add(42)
+	x.IntersectWith(&y)
+	assert.Equal(t, "{9}", x.String())
+}
+
+func TestDifferenceWith(t *testing.T) {
+	var x, y IntSet
+	x.Add(1)
+	x.Add(144)
+	x.Add(9)
+	y.Add(9)
+	y.Add(42)
+	x.DifferenceWith(&y)
+	assert.Equal(t, "{1 144}", x.String())
+}
+
+func TestSymmetricDifference(t *testing.T) {
+	var x, y IntSet
+	x.Add(1)
+	x.Add(144)
+	x.Add(9)
+	y.Add(9)
+	y.Add(42)
+	x.SymmetricDifference(&y)
+	assert.Equal(t, "{1 42 144}", x.String())
+}
