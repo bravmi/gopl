@@ -9,6 +9,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
 )
 
 //!+intset
@@ -19,15 +20,17 @@ type IntSet struct {
 	words []uint64
 }
 
+const wordSize = 32 << (^uint(0) >> 63)
+
 // Has reports whether the set contains the non-negative value x.
 func (s *IntSet) Has(x int) bool {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/wordSize, uint(x%wordSize)
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
 // Add adds the non-negative value x to the set.
 func (s *IntSet) Add(x int) {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/wordSize, uint(x%wordSize)
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
@@ -57,7 +60,10 @@ func (s *IntSet) String() string {
 		if buf.Len() > len("{") {
 			buf.WriteByte(' ')
 		}
-		fmt.Fprintf(&buf, "%d", elem)
+		_, err := fmt.Fprintf(&buf, "%d", elem)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	buf.WriteByte('}')
 	return buf.String()
@@ -84,7 +90,7 @@ func (s *IntSet) Len() int {
 }
 
 func (s *IntSet) Remove(x int) {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/wordSize, uint(x%wordSize)
 	if word < len(s.words) {
 		s.words[word] &^= 1 << bit
 	}
@@ -95,10 +101,10 @@ func (s *IntSet) Clear() {
 }
 
 func (s *IntSet) Copy() *IntSet {
-	var new IntSet
-	new.words = make([]uint64, len(s.words))
-	copy(new.words, s.words)
-	return &new
+	var t IntSet
+	t.words = make([]uint64, len(s.words))
+	copy(t.words, s.words)
+	return &t
 }
 
 func (s *IntSet) AddAll(vals ...int) {
@@ -136,14 +142,14 @@ func (s *IntSet) SymmetricDifference(t *IntSet) {
 }
 
 func (s *IntSet) Elems() []int {
-	elems := []int{}
+	var elems []int
 	for i, word := range s.words {
 		if word == 0 {
 			continue
 		}
-		for j := 0; j < 64; j++ {
+		for j := 0; j < wordSize; j++ {
 			if word&(1<<uint(j)) != 0 {
-				elems = append(elems, 64*i+j)
+				elems = append(elems, wordSize*i+j)
 			}
 		}
 	}
