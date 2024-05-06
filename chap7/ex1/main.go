@@ -10,6 +10,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"log"
 )
 
 //!+bytecounter
@@ -52,7 +53,10 @@ func (lc *LineCounter) Write(p []byte) (int, error) {
 func main() {
 	//!+main
 	var c ByteCounter
-	c.Write([]byte("hello"))
+	_, err := c.Write([]byte("hello"))
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println(c) // "5", = len("hello")
 
 	c = 0 // reset the counter

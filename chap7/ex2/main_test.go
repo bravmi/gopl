@@ -9,6 +9,7 @@ import (
 
 func TestCountingWriter(t *testing.T) {
 	cw, pc := CountingWriter(os.Stdout)
-	cw.Write([]byte("hello world"))
+	_, err := cw.Write([]byte("hello world"))
+	assert.NoError(t, err)
 	assert.Equal(t, int64(11), *pc)
 }
