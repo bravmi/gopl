@@ -158,9 +158,29 @@ type byColumns struct {
 
 func (x byColumns) Len() int { return len(x.tracks) }
 func (x byColumns) Less(i, j int) bool {
+	track1, track2 := x.tracks[i], x.tracks[j]
 	for _, column := range x.columns {
-		if x.tracks[i].Title == column {
-			return true
+		switch column {
+		case "Title":
+			if track1.Title != track2.Title {
+				return track1.Title < track2.Title
+			}
+		case "Artist":
+			if track1.Artist != track2.Artist {
+				return track1.Artist < track2.Artist
+			}
+		case "Album":
+			if track1.Album != track2.Album {
+				return track1.Album < track2.Album
+			}
+		case "Year":
+			if track1.Year != track2.Year {
+				return track1.Year < track2.Year
+			}
+		case "Length":
+			if track1.Length != track2.Length {
+				return track1.Length < track2.Length
+			}
 		}
 	}
 	return false
