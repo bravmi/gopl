@@ -39,11 +39,11 @@ var tracksTemplate = template.Must(template.New("tracksHtml").Parse(`
 	<body>
 		<table>
 			<tr>
-				<th ><a href="?sort=Title">Title</a></th>
-				<th ><a href="?sort=Artist">Artist</a></th>
-				<th ><a href="?sort=Album">Album</a></th>
-				<th ><a href="?sort=Year">Year</a></th>
-				<th ><a href="?sort=Length">Length</a></th>
+				<th><a href="?sort=Title">Title</a></th>
+				<th><a href="?sort=Artist">Artist</a></th>
+				<th><a href="?sort=Album">Album</a></th>
+				<th><a href="?sort=Year">Year</a></th>
+				<th><a href="?sort=Length">Length</a></th>
 			</tr>
 			{{- range . }}
 			<tr>
