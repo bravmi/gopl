@@ -58,7 +58,10 @@ var listTemplate = template.Must(template.New("database").Parse(`
 </html>`))
 
 func (db database) list(w http.ResponseWriter, req *http.Request) {
-	listTemplate.Execute(w, db)
+	err := listTemplate.Execute(w, db)
+	if err != nil {
+		log.Printf("error: %v", err)
+	}
 }
 
 func (db database) price(w http.ResponseWriter, req *http.Request) {
