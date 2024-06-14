@@ -19,7 +19,12 @@ func TestToString(t *testing.T) {
 		{"pow(x, y)", "pow(x, y)"},
 	}
 	for _, test := range tests {
-		expr, _ := eval.Parse(test.expr)
-		assert.Equal(t, test.want, expr.String())
+		testname := test.expr
+		t.Run(testname, func(t *testing.T) {
+			expr, err := eval.Parse(test.expr)
+			assert.NoError(t, err)
+			got := expr.String()
+			assert.Equal(t, test.want, got)
+		})
 	}
 }

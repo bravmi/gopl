@@ -19,7 +19,10 @@ func TestJoin(t *testing.T) {
 		{"", []string{}, ""},
 	}
 	for _, test := range tests {
-		assert.Equal(t, test.want, join(test.sep, test.elems...))
-		assert.Equal(t, test.want, strings.Join(test.elems, test.sep))
+		testname := test.sep + " " + strings.Join(test.elems, "")
+		t.Run(testname, func(t *testing.T) {
+			assert.Equal(t, test.want, join(test.sep, test.elems...))
+			assert.Equal(t, test.want, strings.Join(test.elems, test.sep))
+		})
 	}
 }
