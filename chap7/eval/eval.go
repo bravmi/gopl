@@ -67,4 +67,14 @@ func (c call) Eval(env Env) float64 {
 	panic(fmt.Sprintf("unsupported function call: %s", c.fn))
 }
 
+func (p postUnary) Eval(env Env) float64 {
+	switch p.op {
+	case "++":
+		return p.x.Eval(env) + 1
+	case "--":
+		return p.x.Eval(env) - 1
+	}
+	panic(fmt.Sprintf("unsupported post unary operator: %q", p.op))
+}
+
 //!-Eval2

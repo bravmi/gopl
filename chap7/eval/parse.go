@@ -80,17 +80,22 @@ func Parse(input string) (_ Expr, err error) {
 
 func parseExpr(lex *lexer) Expr { return parseBinary(lex, 1) }
 
-// binary = unary ('+' binary)*
+// binary = (unary | postUnary) ('+' binary)*
 // parseBinary stops when it encounters an
 // operator of lower precedence than prec1.
 func parseBinary(lex *lexer, prec1 int) Expr {
 	lhs := parseUnary(lex)
 	for prec := precedence(lex.token); prec >= prec1; prec-- {
 		for precedence(lex.token) == prec {
-			op := lex.token
+			op1 := lex.token
 			lex.next() // consume operator
+			op2 := lex.token
+			if op1 == op2 {
+				lex.next() // consume operator
+				return postUnary{fmt.Sprintf("%c%c", op1, op1), lhs}
+			}
 			rhs := parseBinary(lex, prec+1)
-			lhs = binary{op, lhs, rhs}
+			lhs = binary{op1, lhs, rhs}
 		}
 	}
 	return lhs

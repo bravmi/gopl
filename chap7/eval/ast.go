@@ -38,4 +38,9 @@ type call struct {
 	args []Expr
 }
 
+type postUnary struct {
+	op string // one of "++", "--"
+	x  Expr
+}
+
 //!-ast

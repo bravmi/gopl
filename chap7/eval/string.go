@@ -28,3 +28,7 @@ func (c call) String() string {
 	}
 	return fmt.Sprintf("%s(%s)", c.fn, strings.Join(args, ", "))
 }
+
+func (p postUnary) String() string {
+	return fmt.Sprintf("%s%s", p.x, p.op)
+}
