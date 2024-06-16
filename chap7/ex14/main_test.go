@@ -13,14 +13,10 @@ func TestToString(t *testing.T) {
 		expr string
 		want string
 	}{
-		{"x++", "x++"},
-		{"x--", "x--"},
-		{"x++ + y", "x++ + y"},
-		{"x-- - y", "x-- - y"},
-		{"+x++ + y", "+x++ + y"},
-		{"-x-- - y", "-x-- - y"},
-		{"+(x++) + y", "+x++ + y"},
-		{"-(x--) - y", "-x-- - y"},
+		{"x!", "x!"},
+		{"x! + y", "x! + y"},
+		{"+x! + y", "+x! + y"},
+		{"+(x!) + y", "+x! + y"},
 	}
 	for _, test := range tests {
 		testname := test.expr
@@ -39,8 +35,8 @@ func TestEval(t *testing.T) {
 		env  eval.Env
 		want string
 	}{
-		{"x++", eval.Env{"x": 1}, "2"},
-		{"x--", eval.Env{"x": 1}, "0"},
+		{"x!", eval.Env{"x": 5}, "120"},
+		{"x!", eval.Env{"x": 10}, "3.6288e+06"},
 	}
 	for _, test := range tests {
 		testname := test.expr

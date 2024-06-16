@@ -39,7 +39,7 @@ type call struct {
 }
 
 type postUnary struct {
-	op string // one of "++", "--"
+	op rune // one of '!'
 	x  Expr
 }
 

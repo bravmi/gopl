@@ -10,6 +10,28 @@ import (
 	"github.com/bravmi/gopl/chap7/eval"
 )
 
+func parseEnv(scanner *bufio.Scanner) eval.Env {
+	env := eval.Env{}
+	scanner.Scan()
+	envStr := scanner.Text()
+	for _, s := range strings.Fields(envStr) {
+		s = strings.Trim(s, ",")
+		parts := strings.Split(s, "=")
+		if len(parts) != 2 {
+			fmt.Println("invalid format:", s)
+			continue
+		}
+		ident := parts[0]
+		val, err := strconv.ParseFloat(parts[1], 64)
+		if err != nil {
+			fmt.Println("failed to parse value for", ident, ":", err)
+			continue
+		}
+		env[eval.Var(ident)] = val
+	}
+	return env
+}
+
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -25,24 +47,8 @@ func main() {
 	}
 
 	fmt.Println("Enter values for variables (e.g. x=1, y=2, ...):")
-	env := eval.Env{}
-	scanner.Scan()
-	envStr := scanner.Text()
-	for _, s := range strings.Fields(envStr) {
-		s := strings.TrimRight(s, ",")
-		pair := strings.Split(s, "=")
-		if len(pair) != 2 {
-			fmt.Println("Invalid variable assignment:", s)
-			return
-		}
-		ident := pair[0]
-		val, err := strconv.ParseFloat(pair[1], 64)
-		if err != nil {
-			fmt.Println("Failed to parse value:", err)
-			return
-		}
-		env[eval.Var(ident)] = val
-	}
+	env := parseEnv(scanner)
+	fmt.Println(env)
 
 	fmt.Println("Evaluating expression...")
 	result := expr.Eval(env)

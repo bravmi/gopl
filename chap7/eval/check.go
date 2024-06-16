@@ -5,7 +5,6 @@ package eval
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 )
 
@@ -57,7 +56,7 @@ func (c call) Check(vars map[Var]bool) error {
 var numParams = map[string]int{"pow": 2, "sin": 1, "sqrt": 1}
 
 func (p postUnary) Check(vars map[Var]bool) error {
-	if !slices.Contains([]string{"++", "--"}, p.op) {
+	if !strings.ContainsRune("!", p.op) {
 		return fmt.Errorf("unexpected post unary op %q", p.op)
 	}
 	return p.x.Check(vars)

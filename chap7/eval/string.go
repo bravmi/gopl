@@ -30,5 +30,5 @@ func (c call) String() string {
 }
 
 func (p postUnary) String() string {
-	return fmt.Sprintf("%s%s", p.x, p.op)
+	return fmt.Sprintf("%s%c", p.x, p.op)
 }

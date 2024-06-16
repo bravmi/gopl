@@ -104,23 +104,11 @@ func parseUnary(lex *lexer) Expr {
 		return unary{op, parseUnary(lex)}
 	}
 	primary := parsePrimary(lex)
-	post := parsePostUnary(lex, primary)
-	if post != nil {
-		return post
+	if lex.token == '!' {
+		lex.next()
+		return postUnary{'!', primary}
 	}
 	return primary
-}
-
-func parsePostUnary(lex *lexer, primary Expr) Expr {
-	token := lex.token
-	if token != lex.scan.Peek() || token == scanner.EOF {
-		return nil
-	}
-	// consume '++' or '--'
-	lex.next()
-	lex.next()
-	op := fmt.Sprintf("%c%c", token, token)
-	return postUnary{op, primary}
 }
 
 // primary = id

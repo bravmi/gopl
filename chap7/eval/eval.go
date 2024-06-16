@@ -69,10 +69,8 @@ func (c call) Eval(env Env) float64 {
 
 func (p postUnary) Eval(env Env) float64 {
 	switch p.op {
-	case "++":
-		return p.x.Eval(env) + 1
-	case "--":
-		return p.x.Eval(env) - 1
+	case '!':
+		return math.Gamma(p.x.Eval(env) + 1)
 	}
 	panic(fmt.Sprintf("unsupported post unary operator: %q", p.op))
 }
