@@ -80,35 +80,47 @@ func Parse(input string) (_ Expr, err error) {
 
 func parseExpr(lex *lexer) Expr { return parseBinary(lex, 1) }
 
-// binary = (unary | postUnary) ('+' binary)*
+// binary = unary ('+' binary)*
 // parseBinary stops when it encounters an
 // operator of lower precedence than prec1.
 func parseBinary(lex *lexer, prec1 int) Expr {
 	lhs := parseUnary(lex)
 	for prec := precedence(lex.token); prec >= prec1; prec-- {
 		for precedence(lex.token) == prec {
-			op1 := lex.token
+			op := lex.token
 			lex.next() // consume operator
-			op2 := lex.token
-			if op1 == op2 {
-				lex.next() // consume operator
-				return postUnary{fmt.Sprintf("%c%c", op1, op1), lhs}
-			}
 			rhs := parseBinary(lex, prec+1)
-			lhs = binary{op1, lhs, rhs}
+			lhs = binary{op, lhs, rhs}
 		}
 	}
 	return lhs
 }
 
-// unary = '+' expr | primary
+// unary = '+' expr | primary | expr '++'
 func parseUnary(lex *lexer) Expr {
 	if lex.token == '+' || lex.token == '-' {
 		op := lex.token
 		lex.next() // consume '+' or '-'
 		return unary{op, parseUnary(lex)}
 	}
-	return parsePrimary(lex)
+	primary := parsePrimary(lex)
+	post := parsePostUnary(lex, primary)
+	if post != nil {
+		return post
+	}
+	return primary
+}
+
+func parsePostUnary(lex *lexer, primary Expr) Expr {
+	token := lex.token
+	if token != lex.scan.Peek() || token == scanner.EOF {
+		return nil
+	}
+	// consume '++' or '--'
+	lex.next()
+	lex.next()
+	op := fmt.Sprintf("%c%c", token, token)
+	return postUnary{op, primary}
 }
 
 // primary = id

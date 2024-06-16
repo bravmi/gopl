@@ -29,6 +29,7 @@ func main() {
 	scanner.Scan()
 	envStr := scanner.Text()
 	for _, s := range strings.Fields(envStr) {
+		s := strings.TrimRight(s, ",")
 		pair := strings.Split(s, "=")
 		if len(pair) != 2 {
 			fmt.Println("Invalid variable assignment:", s)

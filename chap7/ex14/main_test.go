@@ -15,6 +15,12 @@ func TestToString(t *testing.T) {
 	}{
 		{"x++", "x++"},
 		{"x--", "x--"},
+		{"x++ + y", "x++ + y"},
+		{"x-- - y", "x-- - y"},
+		{"+x++ + y", "+x++ + y"},
+		{"-x-- - y", "-x-- - y"},
+		{"+(x++) + y", "+x++ + y"},
+		{"-(x--) - y", "-x-- - y"},
 	}
 	for _, test := range tests {
 		testname := test.expr
