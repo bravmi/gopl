@@ -4,7 +4,7 @@
 // See page 136.
 
 // The toposort program prints the nodes of a DAG in topological order.
-// Usage:
+// usage:
 // go run main.go
 package main
 

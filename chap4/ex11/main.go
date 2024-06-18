@@ -1,7 +1,7 @@
 // Based on:
 // https://github.com/torbiak/gopl/blob/master/ex4.11
 //
-// Usage:
+// usage:
 // go run main.go search repo:golang/go is:open json decoder
 // go run main.go create bravmi gopl
 // go run main.go read bravmi gopl 4

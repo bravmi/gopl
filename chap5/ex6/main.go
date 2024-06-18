@@ -5,7 +5,7 @@
 //!+
 
 // Surface computes an SVG rendering of a 3-D surface function.
-// Usage:
+// usage:
 // go run main.go > surface.svg
 package main
 

@@ -6,7 +6,7 @@
 // Findlinks2 does an HTTP GET on each URL, parses the
 // result as HTML, and prints the links within it.
 //
-// Usage:
+// usage:
 // go run main.go https://golang.org
 package main
 

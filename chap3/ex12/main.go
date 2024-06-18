@@ -1,4 +1,4 @@
-// Usage: go run main.go abc cba abc cbac
+// usage: go run main.go abc cba abc cbac
 package main
 
 import (

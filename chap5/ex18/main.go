@@ -4,7 +4,7 @@
 // See page 148.
 
 // Fetch saves the contents of a URL into a local file.
-// Usage:
+// usage:
 // go run main.go https://go.dev/learn/
 package main
 

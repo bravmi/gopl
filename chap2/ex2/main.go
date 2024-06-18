@@ -1,4 +1,4 @@
-// Usage: go run main.go 1f 1ft 1lb
+// usage: go run main.go 1f 1ft 1lb
 package main
 
 import (

@@ -1,7 +1,7 @@
 // Based on:
 // https://github.com/torbiak/gopl/blob/master/ex4.14
 //
-// Usage: go run main.go bravmi gopl
+// usage: go run main.go bravmi gopl
 package main
 
 import (

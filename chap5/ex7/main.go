@@ -4,7 +4,7 @@
 // See page 133.
 
 // Outline prints the outline of an HTML document tree.
-// Usage:
+// usage:
 // go run main.go https://golang.org
 package main
 

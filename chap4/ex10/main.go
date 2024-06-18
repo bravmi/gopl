@@ -1,5 +1,5 @@
 // Prints a table of GitHub issues matching the search terms.
-// Usage: go run main.go repo:golang/go is:open json decoder
+// usage: go run main.go repo:golang/go is:open json decoder
 package main
 
 import (

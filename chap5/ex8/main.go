@@ -1,4 +1,4 @@
-// Usage:
+// usage:
 // http -F golang.org | go run main.go quote_slide0
 package main
 

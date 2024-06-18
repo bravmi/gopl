@@ -1,4 +1,4 @@
-// Usage: go run main.go gopl.io
+// usage: go run main.go gopl.io
 package main
 
 import (

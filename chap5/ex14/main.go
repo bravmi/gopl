@@ -3,7 +3,7 @@
 
 // See page 139.
 
-// Usage:
+// usage:
 // go run main.go
 package main
 

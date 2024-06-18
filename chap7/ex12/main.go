@@ -6,7 +6,7 @@
 // Http4 is an e-commerce server that registers the /list and /price
 // endpoint by calling http.HandleFunc.
 
-// Usage:
+// usage:
 // go run main.go
 // http http://localhost:8000/list
 // http http://localhost:8000/price\?item\=socks

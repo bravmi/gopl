@@ -1,4 +1,4 @@
-// Usage: go run main.go web
+// usage: go run main.go web
 package main
 
 import (

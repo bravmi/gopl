@@ -4,7 +4,7 @@
 // See page 139.
 
 // Findlinks3 crawls the web, starting with the URLs on the command line.
-// Usage:
+// usage:
 // go run main.go -limit=100 -start=https://golang.org
 // go run main.go
 package main
