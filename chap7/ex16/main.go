@@ -1,3 +1,6 @@
+// Usage
+// go run main.go
+// http 'localhost:8080/calc?expr=x!%2B1&x=5'
 package main
 
 import (
