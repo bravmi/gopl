@@ -32,21 +32,20 @@ func (e Element) String() string {
 	if e.Id != "" {
 		s += "#" + e.Id
 	}
-
 	if len(e.Classes) > 0 {
 		s += "." + strings.Join(e.Classes, ".")
 	}
 	return s
 }
 
-var nameRegexp = regexp.MustCompile(`^[\w]+`)
-var idRegexp = regexp.MustCompile(`#([\w]+)`)
-var classRegexp = regexp.MustCompile(`\.([\w]+)`)
+var nameRe = regexp.MustCompile(`^[\w]+`)
+var idRe = regexp.MustCompile(`#([\w]+)`)
+var classRe = regexp.MustCompile(`\.([\w]+)`)
 
 func ParseSelector(sel string) Element {
-	name := nameRegexp.FindString(sel)
-	idMatch := idRegexp.FindStringSubmatch(sel)
-	classMatch := classRegexp.FindAllStringSubmatch(sel, -1)
+	name := nameRe.FindString(sel)
+	idMatch := idRe.FindStringSubmatch(sel)
+	classMatch := classRe.FindAllStringSubmatch(sel, -1)
 	id := ""
 	if len(idMatch) > 1 {
 		id = idMatch[1]
@@ -57,7 +56,7 @@ func ParseSelector(sel string) Element {
 			classes = append(classes, classMatch[1])
 		}
 	}
-	return Element{name, id, classes}
+	return Element{Name: name, Id: id, Classes: classes}
 }
 
 func fromToken(e xml.StartElement) Element {
@@ -73,7 +72,7 @@ func fromToken(e xml.StartElement) Element {
 			id = attr.Value
 		}
 	}
-	return Element{name, id, classes}
+	return Element{Name: name, Id: id, Classes: classes}
 }
 
 func main() {
