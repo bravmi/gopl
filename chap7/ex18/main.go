@@ -13,6 +13,7 @@ import (
 
 type Node interface {
 	String() string
+	pretty(indent int) string
 } // CharData or *Element
 
 type CharData string
@@ -66,12 +67,9 @@ func ParseXML(r io.Reader) (*Element, error) {
 		case xml.CharData:
 			if len(stack) > 0 {
 				parent := stack[len(stack)-1]
-				lines := strings.Split(string(tok), "\n")
-				for _, line := range lines {
-					line = strings.TrimSpace(line)
-					if len(line) > 0 {
-						parent.Children = append(parent.Children, CharData(line))
-					}
+				s := strings.TrimSpace(string(tok))
+				if len(s) > 0 {
+					parent.Children = append(parent.Children, CharData(s))
 				}
 			}
 		}
@@ -85,27 +83,25 @@ func ParseXML(r io.Reader) (*Element, error) {
 }
 
 func (elem *Element) String() string {
-	return elem.Pretty(0)
+	return elem.pretty(0)
 }
 
-func (elem *Element) Pretty(indent int) string {
+func (elem *Element) pretty(indent int) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("%*s", indent*2, ""))
-	sb.WriteString(fmt.Sprintf("<%s", elem.Type.Local))
+	padding := strings.Repeat(" ", indent*2)
+	sb.WriteString(fmt.Sprintf("%s<%s", padding, elem.Type.Local))
 	for _, attr := range elem.Attr {
 		sb.WriteString(fmt.Sprintf(" %s=%q", attr.Name.Local, attr.Value))
 	}
 	sb.WriteString(">\n")
 	for _, child := range elem.Children {
-		switch child := child.(type) {
-		case *Element:
-			sb.WriteString(child.Pretty(indent + 1))
-		case CharData:
-			sb.WriteString(fmt.Sprintf("%*s", (indent+1)*2, ""))
-			sb.WriteString(fmt.Sprintf("%s\n", child))
-		}
+		sb.WriteString(child.pretty(indent + 1))
 	}
-	sb.WriteString(fmt.Sprintf("%*s", indent*2, ""))
-	sb.WriteString(fmt.Sprintf("</%s>\n", elem.Type.Local))
+	sb.WriteString(fmt.Sprintf("%s</%s>\n", padding, elem.Type.Local))
 	return sb.String()
+}
+
+func (c CharData) pretty(indent int) string {
+	padding := strings.Repeat(" ", indent*2)
+	return fmt.Sprintf("%s%s\n", padding, c)
 }
