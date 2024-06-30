@@ -13,7 +13,7 @@ import (
 
 type Node interface {
 	String() string
-	pretty(indent int) string
+	Pretty(indent int) string
 } // CharData or *Element
 
 type CharData string
@@ -34,10 +34,10 @@ func main() {
 		fmt.Printf("Error parsing XML: %v\n", err)
 		return
 	}
-	fmt.Println(node)
+	fmt.Print(node)
 }
 
-func ParseXML(r io.Reader) (*Element, error) {
+func ParseXML(r io.Reader) (Node, error) {
 	dec := xml.NewDecoder(r)
 	var stack []*Element // stack of element nodes
 
@@ -83,10 +83,10 @@ func ParseXML(r io.Reader) (*Element, error) {
 }
 
 func (elem *Element) String() string {
-	return elem.pretty(0)
+	return elem.Pretty(0)
 }
 
-func (elem *Element) pretty(indent int) string {
+func (elem *Element) Pretty(indent int) string {
 	var sb strings.Builder
 	padding := strings.Repeat(" ", indent*2)
 	sb.WriteString(fmt.Sprintf("%s<%s", padding, elem.Type.Local))
@@ -95,13 +95,13 @@ func (elem *Element) pretty(indent int) string {
 	}
 	sb.WriteString(">\n")
 	for _, child := range elem.Children {
-		sb.WriteString(child.pretty(indent + 1))
+		sb.WriteString(child.Pretty(indent + 1))
 	}
 	sb.WriteString(fmt.Sprintf("%s</%s>\n", padding, elem.Type.Local))
 	return sb.String()
 }
 
-func (c CharData) pretty(indent int) string {
+func (c CharData) Pretty(indent int) string {
 	padding := strings.Repeat(" ", indent*2)
 	return fmt.Sprintf("%s%s\n", padding, c)
 }
