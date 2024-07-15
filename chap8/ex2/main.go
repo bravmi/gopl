@@ -39,15 +39,16 @@ func handleConn(conn net.Conn) {
 		return
 	}
 	conn.Write([]byte("> "))
-	for {
-		msg, err := bufio.NewReader(conn).ReadString('\n')
-		if err != nil {
-			fmt.Println("Connection closed")
+	scanner := bufio.NewScanner(conn)
+	for scanner.Scan() {
+		msg := scanner.Text()
+		if scanner.Err() != nil {
+			fmt.Println("Error reading from connection:", err)
 			return
 		}
 		parts := strings.Fields(msg)
 		if len(parts) == 0 {
-			conn.Write([]byte("Invalid command\n> "))
+			conn.Write([]byte("Missing command\n> "))
 			continue
 		}
 		cmd, args := parts[0], parts[1:]
@@ -78,7 +79,7 @@ func handleCmd(cmd string, args []string, cwd *string) string {
 	case "help":
 		return "Commands: cd, ls, get, pwd, close, help"
 	default:
-		return "Unknown command"
+		return fmt.Sprintf("Unknown command: %s", cmd)
 	}
 }
 
