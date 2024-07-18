@@ -1,3 +1,7 @@
+// usage:
+// go run chap8/clock2/clock.go -port 8001
+// TZ=UTC go run chap8/clock2/clock.go -port 8002
+// go run chap8/ex1/main.go Local=localhost:8001 UTC=localhost:8002
 package main
 
 import (
