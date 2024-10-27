@@ -3,4 +3,4 @@ test:
 	go test ./... | grep -v 'no test'
 
 lint:
-	golangci-lint run
+	golangci-lint run --sort-results

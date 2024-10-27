@@ -38,7 +38,7 @@ func handleConn(conn net.Conn) {
 		fmt.Fprintln(conn, "Error getting current directory")
 		return
 	}
-	conn.Write([]byte("> "))
+	conn.Write([]byte("> ")) //nolint:errcheck
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		msg := scanner.Text()
@@ -48,7 +48,7 @@ func handleConn(conn net.Conn) {
 		}
 		parts := strings.Fields(msg)
 		if len(parts) == 0 {
-			conn.Write([]byte("Missing command\n> "))
+			conn.Write([]byte("Missing command\n> ")) //nolint:errcheck
 			continue
 		}
 		cmd, args := parts[0], parts[1:]
@@ -57,7 +57,7 @@ func handleConn(conn net.Conn) {
 			return
 		}
 		resp := handleCmd(cmd, args, &cwd)
-		conn.Write([]byte(resp + "\n> "))
+		conn.Write([]byte(resp + "\n> ")) //nolint:errcheck
 	}
 }
 
