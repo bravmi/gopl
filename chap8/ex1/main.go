@@ -10,6 +10,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"sync"
 	"text/tabwriter"
 	"time"
 )
@@ -28,6 +29,7 @@ func ParseHost(s string) Host {
 	return h
 }
 
+//goland:noinspection GoUnhandledErrorResult
 func main() {
 	hosts := []Host{}
 	connections := map[string]net.Conn{}
@@ -51,17 +53,38 @@ func main() {
 	w.Flush()
 
 	for {
+		outputs := make(map[string]string)
+		var mutex sync.Mutex
+
+		var wg sync.WaitGroup
 		for _, h := range hosts {
-			conn := connections[h.Name]
-			buf := make([]byte, 1024)
-			n, err := conn.Read(buf)
-			if err != nil {
-				log.Fatalf("error reading from %s: %v", h.Name, err)
+			wg.Add(1)
+			go func(h Host) {
+				defer wg.Done()
+				conn := connections[h.Name]
+				buf := make([]byte, 1024)
+				n, err := conn.Read(buf)
+				if err != nil {
+					return
+				}
+				mutex.Lock()
+				defer mutex.Unlock()
+				outputs[h.Name] = strings.TrimSpace(string(buf[:n]))
+			}(h)
+		}
+		wg.Wait()
+
+		for _, h := range hosts {
+			value, ok := outputs[h.Name]
+			if !ok {
+				fmt.Fprintf(w, "N/A\t")
+			} else {
+				fmt.Fprintf(w, "%s\t", value)
 			}
-			fmt.Fprintf(w, "%s\t", strings.TrimSpace(string(buf[:n])))
 		}
 		fmt.Fprintln(w)
 		w.Flush()
+
 		time.Sleep(1 * time.Second)
 	}
 }
