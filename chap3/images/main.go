@@ -7,10 +7,12 @@
 // Mandelbrot emits a PNG image of the Mandelbrot fractal.
 
 // covers all of ex5, ex6, ex7, ex8, ex9
-// usage: http://localhost:8000
-// usage: http://localhost:8080/?avg=true&xmax=1&ymax=1
-// usage: http://localhost:8080/?f=newton&zoom=2
-// usage: go run main.go -f
+// usage:
+// go run chap3/images/main.go
+// http://localhost:8080
+// http://localhost:8080/?avg=true&xmax=1&ymax=1
+// http://localhost:8080/?f=newton&zoom=2
+// go run chap3/images/main.go -f
 package main
 
 import (
@@ -38,12 +40,12 @@ func main() {
 	)
 	f := mandelbrot
 
-	tofile := flag.Bool("f", false, "write to 'images.png'")
+	tofile := flag.Bool("f", false, "write to 'fractal.png'")
 	flag.Parse()
 
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	if *tofile {
-		fi, err := os.Create("images.png")
+		fi, err := os.Create("fractal.png")
 		if err != nil {
 			log.Fatal("failed to create a file")
 		}
