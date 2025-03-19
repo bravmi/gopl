@@ -6,7 +6,7 @@
 
 // Mandelbrot emits a PNG image of the Mandelbrot fractal.
 
-// covers all of ex5, ex6
+// covers all of ex5, ex6, ex7, ex8, ex9
 // usage: http://localhost:8000
 // usage: http://localhost:8080/?avg=true&xmax=1&ymax=1
 // usage: http://localhost:8080/?f=newton&zoom=2
