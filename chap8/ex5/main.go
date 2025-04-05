@@ -1,139 +1,99 @@
 // Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// See page 58.
+// See page 61.
 //!+
 
-// Surface computes an SVG rendering of a 3-D surface function.
+// Mandelbrot emits a PNG image of the Mandelbrot fractal.
 
 // usage:
-// go run chap3/surface/main.go
+// go run chap3/images/main.go -w 14
 package main
 
 import (
 	"bufio"
 	"flag"
-	"fmt"
-	"io"
+	"image"
+	"image/color"
+	"image/png"
 	"log"
-	"math"
+	"math/cmplx"
 	"os"
+	"runtime"
 	"sync"
+	"time"
 )
-
-const (
-	width, height = 600, 320            // canvas size in pixels
-	cells         = 100                 // number of grid cells
-	xyrange       = 30.0                // axis ranges (-xyrange..+xyrange)
-	xyscale       = width / 2 / xyrange // pixels per x or y unit
-	zscale        = height * 0.4        // pixels per z unit
-	angle         = math.Pi / 6         // angle of x, y axes (=30°)
-)
-
-var sin30, cos30 = math.Sin(angle), math.Cos(angle) // sin(30°), cos(30°)
-
-type zfunc func(x, y float64) float64
-
-type polygon struct {
-	ax, ay float64
-	bx, by float64
-	cx, cy float64
-	dx, dy float64
-}
-
-type position struct {
-	i, j int
-}
 
 func main() {
-	workers := flag.Int("w", 1, "number of workers")
-	flag.Parse()
+	const (
+		width, height         = 4096, 4096
+		xmin, xmax    float64 = -2, +2
+		ymin, ymax    float64 = -2, +2
+	)
 
-	color := "grey"
-	fi, err := os.Create("surface.svg")
+	fileName := "mandelbrot.png"
+	maxWorkers := runtime.GOMAXPROCS(0)
+	workers := flag.Int("w", maxWorkers, "number of workers")
+	flag.Parse()
+	if *workers < 1 {
+		*workers = maxWorkers
+	}
+
+	startTime := time.Now()
+
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+	fi, err := os.Create(fileName)
 	if err != nil {
 		log.Fatal("failed to create a file")
 	}
 	defer fi.Close()
-	w := bufio.NewWriter(fi)
-	svg(w, f, color, *workers)
-	w.Flush()
-}
 
-func svg(w io.Writer, f zfunc, color string, workers int) {
-	fmt.Fprintf(w, "<svg xmlns='http://www.w3.org/2000/svg' "+
-		"style='stroke: grey; fill: white; stroke-width: 0.7' "+
-		"width='%d' height='%d'>", width, height)
-
-	input := make(chan position, 10)
-	output := make(chan *polygon, 10)
-
+	imageRows := make(chan int, height)
 	go func() {
-		for i := 0; i < cells; i++ {
-			for j := 0; j < cells; j++ {
-				input <- position{i: i, j: j}
-			}
+		for py := 0; py < height; py++ {
+			imageRows <- py
 		}
-		close(input)
+		close(imageRows)
 	}()
 
 	var wg sync.WaitGroup
-	for k := 0; k < workers; k++ {
+	for w := 0; w < *workers; w++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			for p := range input {
-				ax, ay, aerr := corner(p.i+1, p.j, f)
-				bx, by, berr := corner(p.i, p.j, f)
-				cx, cy, cerr := corner(p.i, p.j+1, f)
-				dx, dy, derr := corner(p.i+1, p.j+1, f)
-				if aerr != nil || berr != nil || cerr != nil || derr != nil {
-					fmt.Println("skipping invalid polygon")
-					continue
-				}
-				output <- &polygon{
-					ax: ax, ay: ay,
-					bx: bx, by: by,
-					cx: cx, cy: cy,
-					dx: dx, dy: dy,
+			for py := range imageRows {
+				y := float64(py)/height*(ymax-ymin) + ymin
+				for px := 0; px < width; px++ {
+					x := float64(px)/width*(xmax-xmin) + xmin
+					// Image imagePoint (px, py) represents complex value z.
+					z := complex(x, y)
+					img.Set(px, py, mandelbrot(z))
 				}
 			}
 		}()
 	}
+	wg.Wait()
 
-	go func() {
-		wg.Wait()
-		close(output)
-	}()
-
-	for p := range output {
-		fmt.Fprintf(w, "<polygon style='stroke: %s' points='%g,%g %g,%g %g,%g %g,%g'/>\n",
-			color, p.ax, p.ay, p.bx, p.by, p.cx, p.cy, p.dx, p.dy)
+	w := bufio.NewWriter(fi)
+	err = png.Encode(w, img)
+	if err != nil {
+		log.Fatal("failed to encode an image")
 	}
-
-	fmt.Fprintln(w, "</svg>")
+	w.Flush()
+	log.Printf("rendered in %s with %d workers",
+		time.Since(startTime).Truncate(time.Millisecond), *workers)
 }
 
-func corner(i, j int, zf zfunc) (float64, float64, error) {
-	// Find point (x,y) at corner of cell (i,j).
-	x := xyrange * (float64(i)/cells - 0.5)
-	y := xyrange * (float64(j)/cells - 0.5)
+func mandelbrot(z complex128) color.Color {
+	const iterations = 200
+	const contrast = 15
 
-	// Compute surface height z.
-	z := zf(x, y)
-	if math.IsInf(z, 0) || math.IsNaN(z) {
-		return 0, 0, fmt.Errorf("invalid height")
+	var v complex128
+	for n := uint8(0); n < iterations; n++ {
+		v = v*v + z
+		if cmplx.Abs(v) > 2 {
+			return color.RGBA{G: 255 - contrast*n*2, B: 255 - contrast*n, A: 255}
+		}
 	}
-
-	// Project (x,y,z) isometrically onto 2-D SVG canvas (sx,sy).
-	sx := width/2 + (x-y)*cos30*xyscale
-	sy := height/2 + (x+y)*sin30*xyscale - z*zscale
-	return sx, sy, nil
+	return color.Black
 }
-
-func f(x, y float64) float64 {
-	r := math.Hypot(x, y) // distance from (0,0)
-	return math.Sin(r) / r
-}
-
-//!-
