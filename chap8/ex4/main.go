@@ -40,7 +40,7 @@ func handleConn(c net.Conn) {
 	}
 	wg.Wait()
 	if tcpconn, ok := c.(*net.TCPConn); ok {
-		tcpconn.CloseWrite()
+		_ = tcpconn.CloseWrite()
 		log.Println("closed write")
 	} else {
 		// NOTE: ignoring potential errors from input.Err()

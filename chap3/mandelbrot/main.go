@@ -34,12 +34,9 @@ func main() {
 		width, height         = 720, 720
 		xmin, xmax    float64 = -2, +2
 		ymin, ymax    float64 = -2, +2
-		epsX                  = (xmax - xmin) / width
-		epsY                  = (ymax - ymin) / height
 		avg                   = false
 		zoom                  = 1.0
 	)
-	f := mandelbrot
 
 	fileName := "mandelbrot.png"
 	toFile := flag.Bool("f", false, fmt.Sprintf("write to %q", fileName))
@@ -87,7 +84,7 @@ func main() {
 				}
 			}
 			// f
-			f := f
+			f := mandelbrot
 			if s := r.FormValue("f"); s != "" {
 				switch s {
 				case "mandelbrot":
