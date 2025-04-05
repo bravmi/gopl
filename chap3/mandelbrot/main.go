@@ -18,6 +18,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -40,12 +41,13 @@ func main() {
 	)
 	f := mandelbrot
 
-	tofile := flag.Bool("f", false, "write to 'fractal.png'")
+	fileName := "mandelbrot.png"
+	toFile := flag.Bool("f", false, fmt.Sprintf("write to %q", fileName))
 	flag.Parse()
 
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
-	if *tofile {
-		fi, err := os.Create("fractal.png")
+	if *toFile {
+		fi, err := os.Create(fileName)
 		if err != nil {
 			log.Fatal("failed to create a file")
 		}
