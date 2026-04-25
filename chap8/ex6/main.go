@@ -5,8 +5,9 @@
 
 // Crawl3 crawls web links starting with the command-line arguments.
 //
-// This version uses bounded parallelism.
-// For simplicity, it does not address the termination problem.
+// This version uses bounded parallelism and terminates when no work remains.
+
+// usage: go run chap8/ex6/main.go -depth 1 http://gopl.dev
 package main
 
 import (
@@ -53,9 +54,6 @@ func main() {
 	for i := 0; i < 20; i++ {
 		go func() {
 			for link := range unseenLinks {
-				if link.depth > depth {
-					continue
-				}
 				foundUrls := crawl(link.url)
 				var foundLinks []Link
 				for _, url := range foundUrls {
@@ -68,15 +66,21 @@ func main() {
 
 	// The main goroutine de-duplicates worklist items
 	// and sends the unseen ones to the crawlers.
+	// n counts pending worklist sends; when it hits 0, no more can arrive.
 	seen := make(map[string]bool)
-	for list := range worklist {
+	for n := 1; n > 0; n-- {
+		list := <-worklist
 		for _, link := range list {
 			if !seen[link.url] {
 				seen[link.url] = true
-				unseenLinks <- link
+				if link.depth <= depth {
+					n++
+					unseenLinks <- link
+				}
 			}
 		}
 	}
+	close(unseenLinks)
 }
 
 //!-
