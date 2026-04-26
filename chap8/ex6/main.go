@@ -54,9 +54,9 @@ func main() {
 	for i := 0; i < 20; i++ {
 		go func() {
 			for link := range unseenLinks {
-				foundUrls := crawl(link.url)
+				foundURLs := crawl(link.url)
 				var foundLinks []Link
-				for _, url := range foundUrls {
+				for _, url := range foundURLs {
 					foundLinks = append(foundLinks, Link{url, link.depth + 1})
 				}
 				go func() { worklist <- foundLinks }()

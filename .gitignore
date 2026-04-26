@@ -1,14 +1,17 @@
-.ipynb_checkpoints/
+/.ipynb_checkpoints/
 
-.env
+/.env
 
-play.go
-play.ipynb
-play.txt
-play.html
+/play.go
+/play.ipynb
+/play.txt
+/play.html
 
-.idea/
-.vscode/
+/.idea/
+/.vscode/
 
 mandelbrot.png
 surface.svg
+
+/chap*/ex*/ex*
+/ex*
