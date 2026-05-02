@@ -1,6 +1,9 @@
 // Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
+// usage:
+// go run chap8/ex8/main.go
+// nc localhost 8000
 package main
 
 import (
