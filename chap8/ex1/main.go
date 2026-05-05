@@ -5,6 +5,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"net"
@@ -52,30 +53,25 @@ func main() {
 	fmt.Fprintln(w)
 	w.Flush()
 
-	for {
-		outputs := make(map[string]string)
-		var mutex sync.Mutex
-
-		var wg sync.WaitGroup
-		for _, h := range hosts {
-			wg.Add(1)
-			go func(h Host) {
-				defer wg.Done()
-				conn := connections[h.Name]
-				buf := make([]byte, 1024)
-				n, err := conn.Read(buf)
-				if err != nil {
-					return
-				}
+	outputs := make(map[string]string)
+	var mutex sync.Mutex
+	for _, h := range hosts {
+		go func(h Host) {
+			conn := connections[h.Name]
+			scanner := bufio.NewScanner(conn)
+			for scanner.Scan() {
 				mutex.Lock()
-				defer mutex.Unlock()
-				outputs[h.Name] = strings.TrimSpace(string(buf[:n]))
-			}(h)
-		}
-		wg.Wait()
+				outputs[h.Name] = scanner.Text()
+				mutex.Unlock()
+			}
+		}(h)
+	}
 
+	for range time.Tick(time.Second) {
 		for _, h := range hosts {
+			mutex.Lock()
 			value, ok := outputs[h.Name]
+			mutex.Unlock()
 			if !ok {
 				fmt.Fprintf(w, "N/A\t")
 			} else {
@@ -84,7 +80,5 @@ func main() {
 		}
 		fmt.Fprintln(w)
 		w.Flush()
-
-		time.Sleep(1 * time.Second)
 	}
 }
