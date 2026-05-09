@@ -89,15 +89,15 @@ func (elem *Element) String() string {
 func (elem *Element) Pretty(indent int) string {
 	var sb strings.Builder
 	padding := strings.Repeat(" ", indent*2)
-	sb.WriteString(fmt.Sprintf("%s<%s", padding, elem.Type.Local))
+	fmt.Fprintf(&sb, "%s<%s", padding, elem.Type.Local)
 	for _, attr := range elem.Attr {
-		sb.WriteString(fmt.Sprintf(" %s=%q", attr.Name.Local, attr.Value))
+		fmt.Fprintf(&sb, " %s=%q", attr.Name.Local, attr.Value)
 	}
 	sb.WriteString(">\n")
 	for _, child := range elem.Children {
 		sb.WriteString(child.Pretty(indent + 1))
 	}
-	sb.WriteString(fmt.Sprintf("%s</%s>\n", padding, elem.Type.Local))
+	fmt.Fprintf(&sb, "%s</%s>\n", padding, elem.Type.Local)
 	return sb.String()
 }
 
