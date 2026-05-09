@@ -7,6 +7,12 @@ output:
     - severity
 
 linters:
+  settings:
+    errcheck:
+      exclude-functions:
+        - fmt.Sscanf
+        - io.Copy
+        - (*net.TCPConn).CloseWrite
   exclusions:
     presets:
       - std-error-handling
