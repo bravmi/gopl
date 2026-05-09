@@ -31,7 +31,6 @@ func main() {
 	}
 }
 
-//goland:noinspection GoUnhandledErrorResult
 func handleConn(conn net.Conn) {
 	defer conn.Close()
 	cwd, err := os.Getwd()
@@ -39,13 +38,13 @@ func handleConn(conn net.Conn) {
 		fmt.Fprintln(conn, "Error getting current directory")
 		return
 	}
-	fmt.Fprint(conn, "> ") //nolint:errcheck
+	fmt.Fprint(conn, "> ")
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		msg := scanner.Text()
 		parts := strings.Fields(msg)
 		if len(parts) == 0 {
-			fmt.Fprint(conn, "Missing command\n> ") //nolint:errcheck
+			fmt.Fprint(conn, "Missing command\n> ")
 			continue
 		}
 		cmd, args := parts[0], parts[1:]
@@ -54,7 +53,7 @@ func handleConn(conn net.Conn) {
 			return
 		}
 		resp := handleCmd(cmd, args, &cwd)
-		fmt.Fprintf(conn, "%s\n> ", resp) //nolint:errcheck
+		fmt.Fprintf(conn, "%s\n> ", resp)
 	}
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error reading from connection:", err)
