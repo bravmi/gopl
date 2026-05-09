@@ -30,7 +30,6 @@ func ParseHost(s string) Host {
 	return h
 }
 
-//goland:noinspection GoUnhandledErrorResult
 func main() {
 	hosts := []Host{}
 	connections := map[string]net.Conn{}
