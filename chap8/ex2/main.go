@@ -31,6 +31,7 @@ func main() {
 	}
 }
 
+//goland:noinspection GoUnhandledErrorResult
 func handleConn(conn net.Conn) {
 	defer conn.Close()
 	cwd, err := os.Getwd()
@@ -38,17 +39,13 @@ func handleConn(conn net.Conn) {
 		fmt.Fprintln(conn, "Error getting current directory")
 		return
 	}
-	conn.Write([]byte("> ")) //nolint:errcheck
+	fmt.Fprint(conn, "> ") //nolint:errcheck
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		msg := scanner.Text()
-		if scanner.Err() != nil {
-			fmt.Println("Error reading from connection:", err)
-			return
-		}
 		parts := strings.Fields(msg)
 		if len(parts) == 0 {
-			conn.Write([]byte("Missing command\n> ")) //nolint:errcheck
+			fmt.Fprint(conn, "Missing command\n> ") //nolint:errcheck
 			continue
 		}
 		cmd, args := parts[0], parts[1:]
@@ -57,13 +54,19 @@ func handleConn(conn net.Conn) {
 			return
 		}
 		resp := handleCmd(cmd, args, &cwd)
-		conn.Write([]byte(resp + "\n> ")) //nolint:errcheck
+		fmt.Fprintf(conn, "%s\n> ", resp) //nolint:errcheck
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error reading from connection:", err)
 	}
 }
 
 func handleCmd(cmd string, args []string, cwd *string) string {
 	switch cmd {
 	case "cd":
+		if len(args) != 1 {
+			return "Usage: cd <dir>"
+		}
 		return changeDir(args[0], cwd)
 	case "ls":
 		return listDir(*cwd)
@@ -74,8 +77,6 @@ func handleCmd(cmd string, args []string, cwd *string) string {
 		return getFile(args[0], *cwd)
 	case "pwd":
 		return *cwd
-	case "close":
-		return "Connection closed"
 	case "help":
 		return "Commands: cd, ls, get, pwd, close, help"
 	default:
