@@ -24,13 +24,13 @@ func main() {
 	}
 	done := make(chan struct{})
 	go func() {
-		io.Copy(os.Stdout, conn) //nolint:errcheck
+		io.Copy(os.Stdout, conn)
 		log.Println("done")
 		done <- struct{}{} // signal the main goroutine
 	}()
 	mustCopy(conn, os.Stdin)
 	if tcpConn, ok := conn.(*net.TCPConn); ok {
-		tcpConn.CloseWrite() //nolint:errcheck
+		tcpConn.CloseWrite()
 		log.Println("closed write")
 	} else {
 		conn.Close()
