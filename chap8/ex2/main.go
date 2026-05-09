@@ -85,9 +85,9 @@ func handleCmd(cmd string, args []string, cwd *string) string {
 }
 
 func changeDir(dir string, cwd *string) string {
-	newPath := filepath.Join(*cwd, dir)
-	if _, err := os.Stat(newPath); os.IsNotExist(err) {
-		return "Directory does not exist"
+	newPath := filepath.Clean(filepath.Join(*cwd, dir))
+	if info, err := os.Stat(newPath); err != nil || !info.IsDir() {
+		return "Error changing directory"
 	}
 	*cwd = newPath
 	return "Changed directory to " + newPath
