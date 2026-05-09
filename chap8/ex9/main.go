@@ -9,7 +9,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -95,7 +94,8 @@ func walkDir(root string, dir string, n *sync.WaitGroup, fileSizes chan<- File) 
 			subdir := filepath.Join(dir, entry.Name())
 			go walkDir(root, subdir, n, fileSizes)
 		} else {
-			fileSizes <- File{Dir: root, Size: entry.Size()}
+			info, _ := entry.Info()
+			fileSizes <- File{Dir: root, Size: info.Size()}
 		}
 	}
 }
@@ -107,13 +107,13 @@ func walkDir(root string, dir string, n *sync.WaitGroup, fileSizes chan<- File) 
 var sema = make(chan struct{}, 20)
 
 // dirents returns the entries of directory dir.
-func dirents(dir string) []os.FileInfo {
+func dirents(dir string) []os.DirEntry {
 	sema <- struct{}{}        // acquire token
 	defer func() { <-sema }() // release token
 	// ...
 	//!-sema
 
-	entries, err := ioutil.ReadDir(dir)
+	entries, err := os.ReadDir(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "du: %v\n", err)
 		return nil
