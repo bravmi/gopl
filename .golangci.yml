@@ -1,0 +1,12 @@
+version: "2"
+
+output:
+  sort-order:
+    - file
+    - linter
+    - severity
+
+linters:
+  exclusions:
+    presets:
+      - std-error-handling
